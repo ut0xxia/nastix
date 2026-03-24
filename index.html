@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>для пукиша 💖</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial;
+    text-align: center;
+    background: linear-gradient(135deg, #ff758c, #ff7eb3);
+    color: white;
+    overflow: hidden;
+}
+
+h1 { margin-top: 30px; }
+
+#game, #story, #final { margin-top: 30px; }
+
+.heart {
+    font-size: 50px;
+    cursor: pointer;
+    margin: 10px;
+    transition: 0.2s;
+}
+.heart:hover { transform: scale(1.2); }
+
+#message {
+    font-size: 24px;
+    margin-top: 20px;
+    display: none;
+}
+
+#story {
+    display: none;
+    font-size: 26px;
+    padding: 20px;
+}
+
+.photo {
+    width: 200px;
+    border-radius: 20px;
+    margin: 10px;
+}
+
+#final { display: none; }
+
+button {
+    padding: 12px 25px;
+    font-size: 18px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    margin: 10px;
+}
+
+#no {
+    position: absolute;
+    background: pink;
+}
+
+/* Сердечки */
+.flying-heart {
+    position: absolute;
+    font-size: 20px;
+    animation: floatUp 3s linear forwards;
+}
+
+@keyframes floatUp {
+    from { transform: translateY(0); opacity: 1; }
+    to { transform: translateY(-200px); opacity: 0; }
+}
+
+/* Летающие фотки */
+.flying-photo {
+    position: absolute;
+    width: 150px;
+    border-radius: 15px;
+    animation: moveLeft 6s linear forwards;
+}
+
+@keyframes moveLeft {
+    from { transform: translateX(100vw); }
+    to { transform: translateX(-200px); }
+}
+</style>
+</head>
+
+<body>
+
+<h1>пупс найди правильное сердечко 💘</h1>
+
+<div id="game"></div>
+<div id="message"></div>
+
+<div id="story"></div>
+
+<div id="final">
+    <h1>любимко 💖</h1>
+    <p style="font-size: 28px;">го встр??? 💕</p>
+    <button id="yes">конечно 💖</button>
+    <button id="no">пашолнах 😢</button>
+</div>
+
+<script>
+let correctIndex;
+
+/* --- ИГРА --- */
+function startGame() {
+    const game = document.getElementById("game");
+    correctIndex = Math.floor(Math.random() * 6);
+
+    for (let i = 0; i < 6; i++) {
+        const heart = document.createElement("span");
+        heart.className = "heart";
+        heart.innerHTML = "💖";
+
+        heart.onclick = () => {
+            if (i === correctIndex) {
+                showMessage("пабедааааа💕");
+                setTimeout(showStory, 1500);
+            } else {
+                showMessage("сасняяя");
+            }
+        };
+
+        game.appendChild(heart);
+    }
+}
+
+function showMessage(text) {
+    const el = document.getElementById("message");
+    el.innerText = text;
+    el.style.display = "block";
+}
+
+/* --- ПЕЧАТАЮЩИЙСЯ ТЕКСТ --- */
+function typeText(text, element, speed, callback) {
+    let i = 0;
+    element.innerHTML = "";
+
+    function typing() {
+        if (i < text.length) {
+            element.innerHTML += text.charAt(i);
+            i++;
+            setTimeout(typing, speed);
+        } else if (callback) callback();
+    }
+    typing();
+}
+
+/* --- ИСТОРИЯ --- */
+function showStory() {
+    document.getElementById("game").style.display = "none";
+    document.getElementById("message").style.display = "none";
+
+    const story = document.getElementById("story");
+    story.style.display = "block";
+
+    typeText("коть... я давно хотел сказать тебе кое-что 💌", story, 50, () => {
+        setTimeout(() => {
+            story.innerHTML += "<br><br>я тебя очень люблююю 💖";
+        }, 500);
+
+        setTimeout(() => {
+            story.innerHTML += "<br><br><img src='photo1.jpg' class='photo'><img src='photo2.jpg' class='photo'>";
+        }, 1200);
+
+        setTimeout(() => {
+            story.innerHTML += "<br><br>и я очень рад что ты есть 🥺";
+        }, 2000);
+
+        setTimeout(showFinal, 3500);
+    });
+}
+
+/* --- ФИНАЛ --- */
+function showFinal() {
+    document.getElementById("story").style.display = "none";
+    document.getElementById("final").style.display = "block";
+}
+
+/* --- КНОПКИ --- */
+document.getElementById("yes").onclick = () => {
+    document.body.innerHTML = "<h1 style='margin-top:100px;'>очевиднейше....<br>Люблю тебя коооооот ❤️</h1>";
+    
+    // включаем музыку сразу после клика
+    const audio = document.getElementById("loveMusic");
+    if (audio) audio.play().catch(() => {});
+    
+    startHearts();
+};
+
+const noBtn = document.getElementById("no");
+noBtn.onmouseover = () => {
+    noBtn.style.top = Math.random() * (window.innerHeight - 50) + "px";
+    noBtn.style.left = Math.random() * (window.innerWidth - 100) + "px";
+};
+
+/* --- СЕРДЕЧКИ + ТЕКСТ --- */
+function startHearts() {
+    setTimeout(startFlyingPhotos, 7000);
+
+    const messages = [
+        "я тебя люблю 💖",
+        "ты самая лучшая 🥺",
+        "скинь сисечки",
+        "ты моя красотулька 💕",
+        "а по факту мы оба одеты"
+    ];
+
+    setInterval(() => {
+        const el = document.createElement("div");
+
+        if (Math.random() < 0.7) {
+            el.innerHTML = "💖";
+        } else {
+            el.innerHTML = messages[Math.floor(Math.random() * messages.length)];
+            el.style.fontSize = "18px";
+            el.style.padding = "5px 10px";
+            el.style.background = "rgba(255,255,255,0.2)";
+            el.style.borderRadius = "10px";
+        }
+
+        el.className = "flying-heart";
+        el.style.left = Math.random() * window.innerWidth + "px";
+        el.style.top = window.innerHeight + "px";
+
+        document.body.appendChild(el);
+
+        setTimeout(() => el.remove(), 3000);
+    }, 200);
+}
+
+/* --- ЛЕТАЮЩИЕ ФОТКИ --- */
+function startFlyingPhotos() {
+    const audio = document.getElementById("loveMusic");
+    if (audio) {
+        audio.play().catch(() => {});
+    }
+
+    const photos = ["dog.png"];
+
+    setInterval(() => {
+        const img = document.createElement("img");
+        img.src = photos[Math.floor(Math.random() * photos.length)];
+        img.className = "flying-photo";
+
+        img.style.top = Math.random() * (window.innerHeight - 150) + "px";
+
+        document.body.appendChild(img);
+
+        setTimeout(() => img.remove(), 6000);
+    }, 800);
+}
+
+startGame();
+</script>
+<audio id="loveMusic" src="music.mp3"></audio>
+</body>
+</html>
